@@ -1,0 +1,200 @@
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
+
+import logo from "../assets/logo9.png";
+import imga from "../assets/food 1.png";
+
+import { FaBars, FaTimes } from "react-icons/fa";
+import { FaPhone } from "react-icons/fa6";
+import { LuClock, LuShoppingBag } from "react-icons/lu";
+
+import Sidebar from "../Page/Sidebar";
+
+const Navber = () => {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const items = useSelector((state) => state.cart);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const toggleSidebar = () => {
+    setIsOpen(!isOpen);
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape" && isOpen) {
+        setIsOpen(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen]);
+
+  const menuItems = [
+    { name: "Home", path: "/" },
+    { name: "About", path: "/about" },
+    { name: "Item", path: "/item" },
+    { name: "Profile", path: "/profile" },
+    { name: "Contact", path: "/contact" },
+  ];
+
+  return (
+    <>
+      {/* Top Red Bar */}
+      <div className="bg-red-500 p-1 md:flex items-center justify-between hidden">
+        <div className="flex items-center text-white">
+          <LuClock className="mr-2" /> 7.30 AM - 9.30 PM
+        </div>
+        <div className="flex items-center text-white">
+          <FaPhone className="mr-2" /> +91 9153664868
+        </div>
+        <button
+          className="rounded-xl bg-[#FF5722] text-white px-5 py-1 mr-9 hover:bg-[#E64A19] transition"
+          onClick={() => navigate("/Register")}
+        >
+          Register
+        </button>
+      </div>
+
+      {/* Main Header */}
+      <div className="bg-[#1E2A38]">
+        <div className="max-w-[1100px] mx-auto flex justify-between items-center py-1 px-4 md:px-8">
+          {/* Logo */}
+          <div>
+            <img
+              src={logo}
+              alt="Logo"
+              className="w-24 h-auto cursor-pointer"
+              onClick={() => {
+                navigate("/");
+                window.scrollTo(0, 0);
+              }}
+            />
+          </div>
+
+          {/* Desktop Menu */}
+          <ul className="hidden md:flex gap-6 font-semibold text-[#FFFFFF]">
+            {menuItems.map((item, index) => (
+              <li
+                key={index}
+                className={`list-none cursor-pointer p-2 transition border-b-2 ${
+                  location.pathname === item.path
+                    ? "text-[#5DADE2] border-[#5DADE2]"
+                    : "border-transparent hover:text-[#5DADE2] hover:border-[#5DADE2]"
+                }`}
+                onClick={() => navigate(item.path)}
+              >
+                {item.name}
+              </li>
+            ))}
+          </ul>
+
+          {/* Cart & Delivery - only for desktop */}
+          <div className="hidden md:flex items-center gap-4">
+            <div
+              className="w-[50px] h-[50px] bg-[#2A435D] flex justify-center items-center shadow-lg rounded-xl relative cursor-pointer"
+              onClick={toggleSidebar}
+            >
+              <span className="absolute top-0 right-2 text-green-500 font-semibold text-sm">
+                {items.length}
+              </span>
+              <LuShoppingBag className="w-[24px] h-[24px] text-green-500" />
+            </div>
+
+            <div className="text-white font-semibold flex items-center gap-2">
+              <div>
+                Delivery Order <br />
+                <span className="text-[#5DADE2]">+91 9153664868</span>
+              </div>
+              <img src={imga} alt="Food" className="w-10 h-10" />
+            </div>
+          </div>
+
+          {/* Login Button */}
+          <div className="hidden md:block">
+            <button
+              className="rounded-xl bg-[#FF5722] text-white px-6 py-2 hover:bg-[#E64A19] transition"
+              onClick={() => navigate("/Loginpage")}
+            >
+              Login
+            </button>
+          </div>
+
+          {/* Hamburger Icon for Mobile */}
+          <div className="md:hidden flex items-center">
+            <button onClick={() => setMenuOpen(!menuOpen)}>
+              {menuOpen ? (
+                <FaTimes className="text-white text-2xl" />
+              ) : (
+                <FaBars className="text-white text-2xl" />
+              )}
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile Menu */}
+        {menuOpen && (
+          <div className="md:hidden flex flex-col items-center bg-[#2A435D] py-4 space-y-4 text-white font-semibold">
+            {menuItems.map((item, index) => (
+              <li
+                key={index}
+                className={`list-none cursor-pointer p-2 ${
+                  location.pathname === item.path
+                    ? "text-[#5DADE2]"
+                    : "hover:text-[#5DADE2]"
+                }`}
+                onClick={() => {
+                  navigate(item.path);
+                  setMenuOpen(false);
+                }}
+              >
+                {item.name}
+              </li>
+            ))}
+            <button
+              className="rounded-xl bg-[#FF5722] text-white px-6 py-2 hover:bg-[#E64A19] transition"
+              onClick={() => {
+                navigate("/Loginpage");
+                setMenuOpen(false);
+              }}
+            >
+              Login
+            </button>
+          </div>
+        )}
+      </div>
+
+      {/* Floating Cart for Mobile Only */}
+      <div
+        className="fixed bottom-4 right-4 z-[9999] md:hidden bg-[#2A435D] rounded-full p-3 shadow-xl cursor-pointer"
+        onClick={toggleSidebar}
+      >
+        <div className="relative">
+          <LuShoppingBag className="text-green-500 w-6 h-6" />
+          {items.length > 0 && (
+            <span className="absolute -top-2 -right-2 bg-green-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+              {items.length}
+            </span>
+          )}
+        </div>
+      </div>
+
+      {/* Sidebar Overlay */}
+      {isOpen && (
+        <>
+          <div
+            className="fixed inset-0 z-[9998] bg-black bg-opacity-50"
+            onClick={toggleSidebar}
+          ></div>
+          <div className="fixed top-0 right-0 w-full md:w-[40vw] h-screen bg-white z-[9999] shadow-2xl transition-transform duration-300 ease-in-out transform translate-x-0">
+            <Sidebar toggleSidebar={toggleSidebar} />
+          </div>
+        </>
+      )}
+    </>
+  );
+};
+
+export default Navber;
