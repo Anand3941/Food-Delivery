@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
+
 // Layout & Common Components
 import Navbar from "./Components/Navber";
 import Footer from "./Footer/Footer";
@@ -26,12 +27,17 @@ import "react-toastify/dist/ReactToastify.css";
 import Booktable from "./Contact/Booktable";
 import Loginpage from "./Contact/Loginpage";
 import Register from "./Contact/Register";
-import ContactCarousel from "./Crausal/ContactCarousel";
 import ContactPage from "./Page/ContactPage";
+import Single from "./Page/Single";
+import PaymentOptions from "./Page/PaymentOptions";
+import AboutUs from "./Page/AboutUs";
+import SpecialOffers from "./Page/SpecialOffers";
+import Banner from "./Page/Banner";
+import BestSellingDishes from "./Page/BestSellingDishes";
+import TodaySpecialFood from "./Page/TodaySpecialFood";
+import PopularFoodItems from "./Page/PopularFoodItems";
+import BurgerOfferSection from "./Page/BurgerOfferSection";
 
-  // ✅ Make sure path is correct
-
-// Dummy Profile Page for now (if not yet created)
 const Profile = () => (
   <div className="text-center py-20 text-2xl font-semibold">Profile Page Coming Soon</div>
 );
@@ -47,10 +53,10 @@ function App() {
         <Routes>
           {/* Home Page */}
           <Route
-            path="/"
+            path="/home"
             element={
               <>
-                <Crausal />
+                <Banner />
                 <Ourchef />
                 <PopularDis />
                 <Home setCate={setCate} />
@@ -67,8 +73,12 @@ function App() {
                   ))}
                 </div>
                 <Delivery />
+                <TodaySpecialFood />
+                <SpecialOffers />
+                <BestSellingDishes />
+                <BurgerOfferSection />
                 <Testimonial />
-               
+                <Single />
               </>
             }
           />
@@ -78,8 +88,11 @@ function App() {
             path="/about"
             element={
               <>
-                <Crausal />
-                <Testimonial />
+                <AboutUs />
+                <SpecialOffers />
+                <BestSellingDishes />
+                <TodaySpecialFood />
+                <PopularFoodItems />
               </>
             }
           />
@@ -87,26 +100,26 @@ function App() {
           {/* Contact Page */}
           <Route
             path="/contact"
-            element={
-              <>
-            
-              <ContactPage/>
-             
-               
-              
-              </>
-            }
+            element={<ContactPage />}
           />
 
           {/* Profile Page */}
-          <Route path="/profile" element={<Profile />} />
+          <Route
+            path="/profile"
+            element={
+              <>
+                <Profile />
+                <Ourchef />
+              </>
+            }
+          />
 
           {/* Item Page */}
           <Route
             path="/item"
             element={
               <>
-              
+                <SpecialOffers />
                 <Home setCate={setCate} />
                 <div className="w-full flex flex-wrap gap-5 px-5 justify-center items-center pt-8">
                   {cate.map((item) => (
@@ -120,16 +133,18 @@ function App() {
                     />
                   ))}
                 </div>
+                <BurgerOfferSection />
               </>
             }
           />
 
           {/* Book Table Page */}
           <Route path="/booktable" element={<Booktable />} />
+          <Route path="/PaymentOptions" element={<PaymentOptions />} />
 
           {/* Auth Pages */}
           <Route path="/Loginpage" element={<Loginpage />} />
-          <Route path="/Register" element={<Register/>} />
+          <Route path="/Register" element={<Register />} />
         </Routes>
 
         <Footer />

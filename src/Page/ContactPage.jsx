@@ -97,10 +97,10 @@ const ContactPage = () => {
         >
           <h2 style={{ color: "#d63031", marginBottom: "1rem" }}>📞 Contact Details</h2>
           <p>
-            <strong>Address:</strong> 123 Anand Street, Madhubani, Bihar, India
+            <strong>Address:</strong> High School Chok Pandaul, Madhubani, Bihar, India
           </p>
           <p>
-            <strong>Phone:</strong> +91 98765 43210
+            <strong>Phone:</strong> +91 9153664868
           </p>
           <p>
             <strong>Email:</strong> support@anandfooddelivery.com

@@ -22,18 +22,21 @@ const Navber = () => {
     setIsOpen(!isOpen);
   };
 
+  const closeMenu = () => setMenuOpen(false);
+
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === "Escape" && isOpen) {
+      if (e.key === "Escape") {
+        setMenuOpen(false);
         setIsOpen(false);
       }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen]);
+  }, []);
 
   const menuItems = [
-    { name: "Home", path: "/" },
+    { name: "Home", path: "/home" },
     { name: "About", path: "/about" },
     { name: "Item", path: "/item" },
     { name: "Profile", path: "/profile" },
@@ -62,24 +65,22 @@ const Navber = () => {
       <div className="bg-[#1E2A38]">
         <div className="max-w-[1100px] mx-auto flex justify-between items-center py-1 px-4 md:px-8">
           {/* Logo */}
-          <div>
-            <img
-              src={logo}
-              alt="Logo"
-              className="w-24 h-auto cursor-pointer"
-              onClick={() => {
-                navigate("/");
-                window.scrollTo(0, 0);
-              }}
-            />
-          </div>
+          <img
+            src={logo}
+            alt="Logo"
+            className="w-24 h-auto cursor-pointer"
+            onClick={() => {
+              navigate("/");
+              window.scrollTo(0, 0);
+            }}
+          />
 
           {/* Desktop Menu */}
-          <ul className="hidden md:flex gap-6 font-semibold text-[#FFFFFF]">
+          <ul className="hidden md:flex gap-6 font-semibold text-white">
             {menuItems.map((item, index) => (
               <li
                 key={index}
-                className={`list-none cursor-pointer p-2 transition border-b-2 ${
+                className={`cursor-pointer p-2 border-b-2 ${
                   location.pathname === item.path
                     ? "text-[#5DADE2] border-[#5DADE2]"
                     : "border-transparent hover:text-[#5DADE2] hover:border-[#5DADE2]"
@@ -91,7 +92,7 @@ const Navber = () => {
             ))}
           </ul>
 
-          {/* Cart & Delivery - only for desktop */}
+          {/* Cart + Info (Desktop) */}
           <div className="hidden md:flex items-center gap-4">
             <div
               className="w-[50px] h-[50px] bg-[#2A435D] flex justify-center items-center shadow-lg rounded-xl relative cursor-pointer"
@@ -102,7 +103,6 @@ const Navber = () => {
               </span>
               <LuShoppingBag className="w-[24px] h-[24px] text-green-500" />
             </div>
-
             <div className="text-white font-semibold flex items-center gap-2">
               <div>
                 Delivery Order <br />
@@ -122,51 +122,64 @@ const Navber = () => {
             </button>
           </div>
 
-          {/* Hamburger Icon for Mobile */}
+          {/* Mobile Hamburger */}
           <div className="md:hidden flex items-center">
-            <button onClick={() => setMenuOpen(!menuOpen)}>
-              {menuOpen ? (
-                <FaTimes className="text-white text-2xl" />
-              ) : (
-                <FaBars className="text-white text-2xl" />
-              )}
+            <button onClick={() => setMenuOpen(true)}>
+              <FaBars className="text-white text-2xl" />
             </button>
           </div>
         </div>
+      </div>
 
-        {/* Mobile Menu */}
-        {menuOpen && (
-          <div className="md:hidden flex flex-col items-center bg-[#2A435D] py-4 space-y-4 text-white font-semibold">
-            {menuItems.map((item, index) => (
-              <li
-                key={index}
-                className={`list-none cursor-pointer p-2 ${
-                  location.pathname === item.path
-                    ? "text-[#5DADE2]"
-                    : "hover:text-[#5DADE2]"
-                }`}
-                onClick={() => {
-                  navigate(item.path);
-                  setMenuOpen(false);
-                }}
-              >
-                {item.name}
-              </li>
-            ))}
-            <button
-              className="rounded-xl bg-[#FF5722] text-white px-6 py-2 hover:bg-[#E64A19] transition"
+      {/* Mobile Side Menu */}
+      {menuOpen && (
+        <>
+          <div
+            className="fixed inset-0 bg-black bg-opacity-50 z-[9998]"
+            onClick={closeMenu}
+          />
+          <div className="fixed top-0 left-0 w-64 h-full bg-[#1E2A38] text-white z-[9999] shadow-2xl p-6 transition-all duration-300">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-bold">Menu</h2>
+              <FaTimes
+                className="text-2xl cursor-pointer"
+                onClick={closeMenu}
+              />
+            </div>
+
+            <ul className="space-y-4 font-semibold">
+              {menuItems.map((item, index) => (
+                <li
+                  key={index}
+                  className={`cursor-pointer ${
+                    location.pathname === item.path
+                      ? "text-[#5DADE2]"
+                      : "hover:text-[#5DADE2]"
+                  }`}
+                  onClick={() => {
+                    navigate(item.path);
+                    closeMenu();
+                  }}
+                >
+                  {item.name}
+                </li>
+              ))}
+            </ul>
+
+            {/* <button
+              className="mt-6 w-full rounded-xl bg-[#FF5722] text-white px-6 py-2 hover:bg-[#E64A19] transition"
               onClick={() => {
                 navigate("/Loginpage");
-                setMenuOpen(false);
+                closeMenu();
               }}
             >
               Login
-            </button>
+            </button> */}
           </div>
-        )}
-      </div>
+        </>
+      )}
 
-      {/* Floating Cart for Mobile Only */}
+      {/* Floating Cart (Mobile) */}
       <div
         className="fixed bottom-4 right-4 z-[9999] md:hidden bg-[#2A435D] rounded-full p-3 shadow-xl cursor-pointer"
         onClick={toggleSidebar}
@@ -181,14 +194,14 @@ const Navber = () => {
         </div>
       </div>
 
-      {/* Sidebar Overlay */}
+      {/* Cart Sidebar */}
       {isOpen && (
         <>
           <div
-            className="fixed inset-0 z-[9998] bg-black bg-opacity-50"
+            className="fixed inset-0 z-[9998] bg-black/40"
             onClick={toggleSidebar}
-          ></div>
-          <div className="fixed top-0 right-0 w-full md:w-[40vw] h-screen bg-white z-[9999] shadow-2xl transition-transform duration-300 ease-in-out transform translate-x-0">
+          />
+          <div className="fixed top-0 right-0 w-full md:w-[40vw] h-screen bg-white z-[9999] shadow-2xl transition-transform duration-300 ease-in-out">
             <Sidebar toggleSidebar={toggleSidebar} />
           </div>
         </>
